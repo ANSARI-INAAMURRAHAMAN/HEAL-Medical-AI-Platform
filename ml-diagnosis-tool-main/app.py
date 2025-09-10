@@ -192,22 +192,28 @@ def kidney_pred():
 
     x=np.array([sg,al,sc,hemo,pcv,htn]).reshape(1,-1)
     print(x)
-    scaler_path=os.path.join('models/scaler_kidney.pkl')
-    scaler_kidney=None
-    with open(scaler_path,'rb') as scaler_file:
-        scaler_kidney=pickle.load(scaler_file)
+    
+    try:
+        scaler_path=os.path.join('models/scaler_kidney.pkl')
+        scaler_kidney=None
+        with open(scaler_path,'rb') as scaler_file:
+            scaler_kidney=pickle.load(scaler_file)
 
-    x=scaler_kidney.transform(x)
+        x=scaler_kidney.transform(x)
 
-    model_path=os.path.join('models/rf_kidney.sav')
-    rf_kidney=joblib.load(model_path)
+        model_path=os.path.join('models/rf_kidney.sav')
+        rf_kidney=joblib.load(model_path)
 
-    Y_pred=rf_kidney.predict(x)
+        Y_pred=rf_kidney.predict(x)
 
-    # for No ckd Risk
-    if Y_pred==0:
-        return render_template('no_disease.html',title='Kidney Disease')
-    else:
+        # for No ckd Risk
+        if Y_pred==0:
+            return render_template('no_disease.html',title='Kidney Disease')
+        else:
+            return render_template('yes_disease.html',title='Kidney Disease')
+    except Exception as e:
+        print(f"Error in kidney prediction: {str(e)}")
+        return render_template('no_disease.html',title='Kidney Disease - Error in prediction')
         return render_template('yes_disease.html',title='Kidney Disease')
 
 #liver
