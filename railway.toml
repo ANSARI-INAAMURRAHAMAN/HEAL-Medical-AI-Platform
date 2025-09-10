@@ -1,0 +1,7 @@
+[build]
+builder = "nixpacks"
+buildCommand = "cd ml-diagnosis-tool-main && pip install -r requirements.txt"
+
+[deploy]
+startCommand = "cd ml-diagnosis-tool-main && gunicorn app:app"
+workingDirectory = "ml-diagnosis-tool-main"
