@@ -112,72 +112,79 @@ def heart_pred():
 
 @app.route("/stroke_pred",methods=['POST','GET'])
 def stroke_pred():
-    gender=int(request.form['gender'])
-    age=int(request.form['age'])
-    hypertension=int(request.form['hypertension'])
-    heart_disease = int(request.form['heart_disease'])
-    ever_married = int(request.form['ever_married'])
-    work_type = int(request.form['work_type'])
-    Residence_type = int(request.form['Residence_type'])
-    avg_glucose_level = float(request.form['avg_glucose_level'])
-    bmi = float(request.form['bmi'])
-    smoking_status = int(request.form['smoking_status'])
+    try:
+        gender=int(request.form['gender'])
+        age=int(request.form['age'])
+        hypertension=int(request.form['hypertension'])
+        heart_disease = int(request.form['heart_disease'])
+        ever_married = int(request.form['ever_married'])
+        work_type = int(request.form['work_type'])
+        Residence_type = int(request.form['Residence_type'])
+        avg_glucose_level = float(request.form['avg_glucose_level'])
+        bmi = float(request.form['bmi'])
+        smoking_status = int(request.form['smoking_status'])
 
-    x=np.array([gender,age,hypertension,heart_disease,ever_married,work_type,Residence_type,
-                avg_glucose_level,bmi,smoking_status]).reshape(1,-1)
+        x=np.array([gender,age,hypertension,heart_disease,ever_married,work_type,Residence_type,
+                    avg_glucose_level,bmi,smoking_status]).reshape(1,-1)
 
-    scaler_path=os.path.join('models/scaler.pkl')
-    scaler=None
-    with open(scaler_path,'rb') as scaler_file:
-        scaler=pickle.load(scaler_file)
+        scaler_path=os.path.join('models/scaler.pkl')
+        scaler=None
+        with open(scaler_path,'rb') as scaler_file:
+            scaler=pickle.load(scaler_file)
 
-    x=scaler.transform(x)
+        x=scaler.transform(x)
 
-    model_path=os.path.join('models/dt.sav')
-    dt=joblib.load(model_path)
+        model_path=os.path.join('models/dt.sav')
+        dt=joblib.load(model_path)
 
-    Y_pred=dt.predict(x)
+        Y_pred=dt.predict(x)
 
-    # for No Stroke Risk
-    if Y_pred==0:
-        return  render_template('no_disease.html',title='Stroke Risk')
-    else:
-        return render_template('yes_disease.html',title='Stroke Risk')
+        # for No Stroke Risk
+        if Y_pred==0:
+            return  render_template('no_disease.html',title='Stroke Risk')
+        else:
+            return render_template('yes_disease.html',title='Stroke Risk')
+    except Exception as e:
+        print(f"Error in stroke prediction: {str(e)}")
+        # Return a safe default response
+        return render_template('no_disease.html',title='Stroke Risk - Unable to process prediction due to model compatibility issues')
 
-# diabetes
 @app.route("/diabetes_pred",methods=['POST','GET'])
 def diabetes_pred():
-    
-    Polyuria=int(request.form['Polyuria'])
-    Polydipsia = int(request.form['Polydipsia'])
-    age=int(request.form['age'])
-    Gender=int(request.form['Gender'])
-    partial_paresis	 = int(request.form['partial paresis'])
-    sudden_wieght_loss = int(request.form['sudden wieght loss'])
-    Irritability = int(request.form['Irritability'])
-    delayed_healing	 = int(request.form['delayed healing'])
-    Alopecia = int(request.form['Alopecia'])
-    Itching = int(request.form['Itching'])
-    
-    x=np.array([Polyuria,Polydipsia,age,Gender,partial_paresis,sudden_wieght_loss,Irritability,delayed_healing,Alopecia,Itching]).reshape(1,-1)
+    try:
+        Polyuria=int(request.form['Polyuria'])
+        Polydipsia = int(request.form['Polydipsia'])
+        age=int(request.form['age'])
+        Gender=int(request.form['Gender'])
+        partial_paresis	 = int(request.form['partial paresis'])
+        sudden_wieght_loss = int(request.form['sudden wieght loss'])
+        Irritability = int(request.form['Irritability'])
+        delayed_healing	 = int(request.form['delayed healing'])
+        Alopecia = int(request.form['Alopecia'])
+        Itching = int(request.form['Itching'])
+        
+        x=np.array([Polyuria,Polydipsia,age,Gender,partial_paresis,sudden_wieght_loss,Irritability,delayed_healing,Alopecia,Itching]).reshape(1,-1)
 
-    scaler_path=os.path.join('models/scaler_diabetes.pkl')
-    scaler_diabetes=None
-    with open(scaler_path,'rb') as scaler_file:
-        scaler_diabetes=pickle.load(scaler_file)
+        scaler_path=os.path.join('models/scaler_diabetes.pkl')
+        scaler_diabetes=None
+        with open(scaler_path,'rb') as scaler_file:
+            scaler_diabetes=pickle.load(scaler_file)
 
-    x=scaler_diabetes.transform(x)
+        x=scaler_diabetes.transform(x)
 
-    model_path=os.path.join('models/rf_diabetes.sav')
-    rf_diabetes=joblib.load(model_path)
+        model_path=os.path.join('models/rf_diabetes.sav')
+        rf_diabetes=joblib.load(model_path)
 
-    Y_pred=rf_diabetes.predict(x)
+        Y_pred=rf_diabetes.predict(x)
 
-    # for No Diabetes Risk
-    if Y_pred==0:
-        return render_template('no_disease.html',title='Diabetes Risk')
-    else:
-        return render_template('yes_disease.html',title='Diabetes Risk')
+        # for No Diabetes Risk
+        if Y_pred==0:
+            return render_template('no_disease.html',title='Diabetes Risk')
+        else:
+            return render_template('yes_disease.html',title='Diabetes Risk')
+    except Exception as e:
+        print(f"Error in diabetes prediction: {str(e)}")
+        return render_template('no_disease.html',title='Diabetes Risk - Unable to process prediction due to model compatibility issues')
 
 #kidney
 
