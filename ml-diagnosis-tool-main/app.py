@@ -275,6 +275,17 @@ def page_not_found(e):
     # note that we set the 404 status explicitly
     return render_template('404.html'), 404
 
+# Handle missing static files gracefully
+@app.route('/vendor/<path:filename>')
+def vendor_files(filename):
+    # Return empty response for missing vendor files
+    return "", 404
+
+@app.route('/assets/<path:filename>')
+def missing_assets(filename):
+    # Return empty response for missing asset files
+    return "", 404
+
 if __name__=="__main__":
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=False)
