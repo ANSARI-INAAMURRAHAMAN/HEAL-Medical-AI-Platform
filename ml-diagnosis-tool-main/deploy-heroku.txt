@@ -1,0 +1,24 @@
+# Heroku Deployment Commands
+
+# 1. Login to Heroku
+heroku login
+
+# 2. Create a new Heroku app
+heroku create heal-medical-ai-platform
+
+# 3. Set Python buildpack
+heroku buildpacks:set heroku/python
+
+# 4. Configure environment variables
+heroku config:set FLASK_ENV=production
+
+# 5. Initialize git repository (if not already done)
+git init
+git add .
+git commit -m "Initial deployment setup"
+
+# 6. Deploy to Heroku
+git push heroku main
+
+# 7. Open your deployed app
+heroku open

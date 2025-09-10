@@ -1,0 +1,12 @@
+# Docker Deployment Commands
+
+# 1. Build the Docker image
+docker build -t heal-medical-ai .
+
+# 2. Run the container locally
+docker run -p 5000:5000 heal-medical-ai
+
+# 3. Or use docker-compose for development
+docker-compose up --build
+
+# Your app will be available at http://localhost:5000
